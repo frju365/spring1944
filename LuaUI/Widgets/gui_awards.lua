@@ -13,21 +13,23 @@ end
 
 local IMG_PATH = "LuaRules/Images/awards/"
 local AWARD_OFFSET = 550
-local AWARD_ECODMG = AWARD_OFFSET+1
-local AWARD_DMG = AWARD_OFFSET+2
-local AWARD_EFF = AWARD_OFFSET+3
-local AWARD_COM = AWARD_OFFSET+4
-local AWARD_DMGREC = AWARD_OFFSET+5
-local AWARD_SLEEP = AWARD_OFFSET+6
+local AWARD_ECO = AWARD_OFFSET+1
+local AWARD_CONQ = AWARD_OFFSET+2
+local AWARD_GERM = AWARD_OFFSET+3
+local AWARD_OFFi = AWARD_OFFSET+4
+local AWARD_LEUT = AWARD_OFFSET+5
+local AWARD_HIROH = AWARD_OFFSET+6
+local AWARD_GEAT = AWARD_OFFSET+7
+local AWARD_NORM = AWARD_OFFSET+8
 
 local AWARD_TEXT = {
-	[AWARD_ECODMG] = 'RAIDER : Destroying enemy resource production',
-	[AWARD_DMG] = 'DESTROYER : Destroying enemy units',
+	[AWARD_ECO] = 'Strategical player : you produce the most ressource',
+	[AWARD_CONQ] = 'Conquerant : You did quite everything',
 	[AWARD_EFF] = 'EFFICIENCY : Killed value / Lost value',
 	[AWARD_COM] = 'COMMANDER : Fighting with Commander'
 }
 
-local AWARD_OTHERS = AWARD_OFFSET+7
+local AWARD_OTHERS = AWARD_OFFSET+9
 
 local COMMANDER_XP_AWARD_THRESHOLD = 0.5 -- between III and IV on the converted scale
 local EFFICIENCY_AWARD_THRESHOLD = 1.0
@@ -42,42 +44,19 @@ local coopInfo = {}
 local present = {}
 
 local econUnitDefIDs = {
-	--------- AVEN
-	[UnitDefNames["aven_solar_collector"].id] = true,
-	[UnitDefNames["aven_wind_generator"].id] = true,
-	[UnitDefNames["aven_tidal_generator"].id] = true,
-	[UnitDefNames["aven_metal_extractor"].id] = true,
-	[UnitDefNames["aven_moho_mine"].id] = true,
-	[UnitDefNames["aven_exploiter"].id] = true,
-	[UnitDefNames["aven_fusion_reactor"].id] = true,
-	[UnitDefNames["aven_mobile_fusion"].id] = true,
-	[UnitDefNames["aven_geothermal_powerplant"].id] = true,
-	[UnitDefNames["aven_energy_storage"].id] = true,
-	[UnitDefNames["aven_metal_storage"].id] = true,
+	--------- all
+	[UnitDefNames["SupplyDepot"].id] = true,
+	[UnitDefNames["Storage"].id] = true,
+	[UnitDefNames["Supplies"].id] = true,
+	[UnitDefNames["SuppliesSmall"].id] = true,
+	--------- GBR
+	[UnitDefNames["GBR_StorageCamo"].id] = true,
 	
-	--------- GEAR
-	[UnitDefNames["gear_solar_collector"].id] = true,
-	[UnitDefNames["gear_wind_generator"].id] = true,
-	[UnitDefNames["gear_tidal_generator"].id] = true,
-	[UnitDefNames["gear_metal_extractor"].id] = true,
-	[UnitDefNames["gear_moho_mine"].id] = true,
-	[UnitDefNames["gear_exploiter"].id] = true,
-	[UnitDefNames["gear_fusion_power_plant"].id] = true,
-	[UnitDefNames["gear_geothermal_powerplant"].id] = true,
-	[UnitDefNames["gear_energy_storage"].id] = true,
-	[UnitDefNames["gear_metal_storage"].id] = true,
+	--------- GER
+	[UnitDefNames["GER_StorageBunker"].id] = true,
 	
-	--------- CLAW	
-	[UnitDefNames["claw_solar_collector"].id] = true,
-	[UnitDefNames["claw_wind_generator"].id] = true,
-	[UnitDefNames["claw_tidal_generator"].id] = true,
-	[UnitDefNames["claw_adv_fusion_reactor"].id] = true,
-	[UnitDefNames["claw_metal_extractor"].id] = true,
-	[UnitDefNames["claw_moho_mine"].id] = true,
-	[UnitDefNames["claw_exploiter"].id] = true,
-	[UnitDefNames["claw_geothermal_powerplant"].id] = true,
-	[UnitDefNames["claw_energy_storage"].id] = true,
-	[UnitDefNames["claw_metal_storage"].id] = true,
+	--------- JPN	
+	[UnitDefNames["JPN_StorageTunnel"].id] = true,
 	
 	--------- SPHERE
 	[UnitDefNames["sphere_tidal_generator"].id] = true,
@@ -234,6 +213,7 @@ function gadget:UnitTaken(unitID, unitDefID, teamID, newTeam)
     end
 end
 
+function gadget
 
 function gadget:GameOver(winningAllyTeams)
 	--calculate average damage dealt
